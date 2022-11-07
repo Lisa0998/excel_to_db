@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  ch_server:
+    image: yandex/clickhouse-server
+    container_name: ch_server
+    restart: always
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_DB: test
+      CLICKHOUSE_USER: lisa
+      CLICKHOUSE_PASSWORD: fox
+    volumes:
+      - chstore:/var/lib/clickhouse
+volumes:
+  chstore:
