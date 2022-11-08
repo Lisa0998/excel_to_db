@@ -24,14 +24,17 @@ def create_df_from_path(path: str) -> pd.DataFrame:
 #                 compression=False,
 #                 settings={"use_numpy":True})
 
-client = clickhouse_connect.get_client(host='localhost',
-                                       user='lisa',
-                                       password='fox',
-                                       port=8123,
-                                       session_id='example_session_1',
-                                       connect_timeout=15,
-                                       database='test',
-                                       distributed_ddl_task_timeout=300)
+client = clickhouse_connect.get_client(
+    host='localhost',
+    user='lisa',
+    password='fox',
+    port=8123,
+    session_id='example_session_1',
+    connect_timeout=15,
+    database='test',
+    distributed_ddl_task_timeout=300,
+    compress=False,
+)
 
 def create_table():
     client.command("""
