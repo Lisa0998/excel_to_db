@@ -1,3 +1,4 @@
+import clickhouse_connect
 import pandas as pd
 from clickhouse_driver import Client
 import os as os
@@ -14,21 +15,30 @@ def create_df_from_path(path: str) -> pd.DataFrame:
     return dataframe
 
 
-client = Client('localhost',
-                user='lisa',
-                password='fox',
-                secure=False,
-                verify=False,
-                database='test',
-                compression=False,
-                settings={"use_numpy":True})
+# client = Client('localhost',
+#                 user='lisa',
+#                 password='fox',
+#                 secure=False,
+#                 verify=False,
+#                 database='test',
+#                 compression=False,
+#                 settings={"use_numpy":True})
+
+client = clickhouse_connect.get_client(host='localhost',
+                                       user='lisa',
+                                       password='fox',
+                                       port=8123,
+                                       session_id='example_session_1',
+                                       connect_timeout=15,
+                                       database='test',
+                                       distributed_ddl_task_timeout=300)
 
 def create_table():
-    client.execute("""
+    client.command("""
     DROP TABLE if exists data_from_xlsx
     """)
 
-    client.execute("""
+    client.command("""
     CREATE TABLE data_from_xlsx
         (calculation_date Date,
         credit_id Int64,
@@ -56,10 +66,7 @@ def create_table():
 create_table()
 
 def insert_data(data: pd.DataFrame):
-    client.insert_dataframe("""
-    INSERT INTO data_from_xlsx
-    VALUES
-    """, data)
+    client.insert_df("data_from_xlsx", data)
 
 
 for i in get_all_paths(path):
