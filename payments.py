@@ -34,19 +34,18 @@ def create_table():
     client.command("""
     CREATE TABLE zeo_payments
         (id Int64,
-        date_received Date,
+        `date received` Date,
         main_debt_repaid Nullable(Float64),
         percent_debt_repaid Nullable(Float64),
         insurance_for_client Nullable(Float64)
         )
         ENGINE = MergeTree
-        PARTITION BY toYYYYMM(date_received) ORDER BY (date_received)
+        PARTITION BY toYYYYMM(`date received`) ORDER BY (`date received`)
     """)
 
 create_table()
 
 def insert_data(data: pd.DataFrame):
-    print(data)
     client.insert_df("zeo_payments", data)
 
 
