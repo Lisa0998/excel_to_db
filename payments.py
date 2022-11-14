@@ -34,13 +34,14 @@ def create_table():
     client.command("""
     CREATE TABLE zeo_payments
         (id Int64,
-        `date received` Date,
+        date_received Date,
         main_debt_repaid Nullable(Float64),
         percent_debt_repaid Nullable(Float64),
-        insurance_for_client Nullable(Float64)
+        insurance_for_client Nullable(Float64),
+        payment_month Date
         )
         ENGINE = MergeTree
-        PARTITION BY toYYYYMM(`date received`) ORDER BY (`date received`)
+        PARTITION BY toYYYYMM(payment_month) ORDER BY (payment_month)
     """)
 
 create_table()
